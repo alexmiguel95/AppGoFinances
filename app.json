@@ -5,7 +5,11 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.bycedric.awesomeapp",
+      "versionCode": 1
+    }
   },
   "name": "GoFinances"
 }

@@ -1,0 +1,14 @@
+code --install-extension formulahendry.auto-close-tag
+code --install-extension steoates.autoimport
+code --install-extension formulahendry.auto-rename-tag
+code --install-extension aaron-bond.better-comments
+code --install-extension dsznajder.es7-react-js-snippets
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension eamodio.gitlens
+code --install-extension esbenp.prettier-vscode
+code --install-extension rangav.vscode-thunder-client
+code --install-extension ms-vscode.vscode-typescript-tslint-plugin
+code --install-extension pkief.material-icon-theme
+code --install-extension vscode-styled-components
+code --install-extension cssho.vscode-svgviewer
+code --install-extension bycedric.vscode-expo
