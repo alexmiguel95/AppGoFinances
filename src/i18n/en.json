@@ -1,5 +1,9 @@
 {
     "dashBoard": {
         "hello": "Hello, "
+    },
+    "highlightCard" : {
+        "entry": "Entry",
+        "lastTransaction": "Last entry day %{day} of %{month}"
     }
 }

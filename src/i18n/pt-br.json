@@ -1,5 +1,12 @@
 {
     "dashBoard": {
-        "hello": "Olá, "
+        "hello": "Olá, ",
+        "highlightCard" : {
+            "entry": "Entrada",
+            "lastTransaction": "Última entrada dia %{day} de %{month}",
+            "exits": "Saídas",
+            "lastExit": "Última saída dia %{day} de %{month}",
+            "fromTo": "%{from} á %{to} de %{month}"
+        }
     }
 }
