@@ -2,7 +2,7 @@ import React from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
-import { TransactionCardProps } from '../model/transactionCard';
+import { TransactionCardProps } from '../model/transaction-card';
 import StatusAccount from '../model/enums/statusAccount';
 
 

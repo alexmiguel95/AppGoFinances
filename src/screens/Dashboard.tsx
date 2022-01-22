@@ -1,47 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
 import { RFValue, RFPercentage } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
 import i18n from '../i18n/i18n';
 import HighlightCard from '../components/HighlightCard';
 import TransactionCard from '../components/TransactionCard';
-import HighlightCardType from '../model/enums/highlightCardType';
-import { TransactionCardProps } from '../model/transactionCard';
+import highlightCardType from '../model/enums/highlightCardType';
+import { TransactionCardProps } from '../model/transaction-card';
 import { FlatList, FlatListProps } from 'react-native';
 import StatusAccount from '../model/enums/statusAccount';
-
-interface DataListProps extends TransactionCardProps {
-    id: string;
-}
+import BalanceAccount from '../model/balance-account';
+import balanceAccountService from '../service/balance-account-service';
+import dateUtils from '../utils/data-utils';
 
 const Dashboard = () => {
-    const data: DataListProps[] = [
-        {
-            id: '1',
-            type: StatusAccount.POSITIVE,
-            title: 'Desenvolvimento de site',
-            amount: '12.000,00',
-            category: { name: 'Vendas', icon: 'dollar-sign' },
-            date: '13/04/2020',
-        },
-        {
-            id: '2',
-            type: StatusAccount.NEGATIVE,
-            title: 'Hamburgueria Pizzy',
-            amount: '59,00',
-            category: { name: 'Alimentação', icon: 'coffee' },
-            date: '10/04/2020',
-        },
-        {
-            id: '3',
-            type: StatusAccount.NEGATIVE,
-            title: 'Aluguel do apartamento',
-            amount: '1.200,00',
-            category: { name: 'Casa', icon: 'shopping-bag' },
-            date: '10/04/2020',
-        },
-    ];
+    const [balanceAccountData, setBalanceAccountData] = useState<BalanceAccount>();
+    const [histotyTransactions, setHistotyTransactions] = useState<TransactionCardProps[]>();
 
+    useEffect(() => {
+        balanceAccountService.getBalanceAccount().then(item => setBalanceAccountData(item));
+        balanceAccountService.getHistoryTransactions().then(item => setHistotyTransactions(item));
+    }, []);
+    
     return (
         <StyledContainer>
             <StyledHeader>
@@ -59,29 +39,48 @@ const Dashboard = () => {
 
             <StyledHighlightCards>
                 <HighlightCard
-                    type={HighlightCardType.UP}
+                    type={highlightCardType.UP}
                     title={i18n.t('dashBoard.highlightCard.entry')}
-                    amount="17.400,00"
-                    lastTransaction={i18n.t('dashBoard.highlightCard.lastTransaction', { day: '13', month: 'abril' })}
+                    amount={balanceAccountData?.entry.amount ?? ''}
+                    lastTransaction={i18n.t(
+                        'dashBoard.highlightCard.lastTransaction',
+                        { 
+                            day: dateUtils().getDayOfTheMonth(balanceAccountData?.entry.lastData),
+                            month: dateUtils().getMonthName(balanceAccountData?.entry.lastData)
+                        }
+                    )}
                 />
                 <HighlightCard
-                    type={HighlightCardType.DOWN}
+                    type={highlightCardType.DOWN}
                     title={i18n.t('dashBoard.highlightCard.exits')}
-                    amount="1.259,00"
-                    lastTransaction={i18n.t('dashBoard.highlightCard.lastExit', { day: '03', month: 'abril' })}
+                    amount={balanceAccountData?.exits.amount ?? ''}
+                    lastTransaction={i18n.t(
+                        'dashBoard.highlightCard.lastExit',
+                        { 
+                            day: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData), 
+                            month: dateUtils().getMonthName(balanceAccountData?.exits.lastData)
+                        }
+                    )}
                 />
                 <HighlightCard
-                    type={HighlightCardType.TOTAL}
+                    type={highlightCardType.TOTAL}
                     title="Total"
-                    amount="16.141,00"
-                    lastTransaction={i18n.t('dashBoard.highlightCard.fromTo', { from: '01', to: '16', month: 'abril' })}
+                    amount={balanceAccountData?.total.amount ?? ''}
+                    lastTransaction={i18n.t(
+                        'dashBoard.highlightCard.fromTo',
+                        { 
+                            from: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData),
+                            to: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.firstData),
+                            month: dateUtils().getMonthName(balanceAccountData?.exits.lastData)
+                        }
+                    )}
                 />
             </StyledHighlightCards>
 
             <StyledTransactions>
                 <StyledTitleTransactions>{i18n.t('dashBoard.transactions.listing')}</StyledTitleTransactions>
                 <StyledTransactionList
-                    data={data}
+                    data={histotyTransactions}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => <TransactionCard data={item} />}
                 />
@@ -166,7 +165,7 @@ const StyledTitleTransactions = styled.Text`
 `;
 
 const StyledTransactionList = styled(
-    FlatList as new (props: FlatListProps<DataListProps>) => FlatList<DataListProps>).attrs({
+    FlatList as new (props: FlatListProps<TransactionCardProps>) => FlatList<TransactionCardProps>).attrs({
     showVerticalScrollIndicator: false,
     contentContainerStyle: { paddingBottom: 10 },
 })``;

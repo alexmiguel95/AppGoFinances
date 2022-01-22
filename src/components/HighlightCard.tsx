@@ -2,17 +2,17 @@ import React from 'react';
 import styled, { css } from 'styled-components/native';
 import { Feather } from '@expo/vector-icons'
 import { RFValue } from 'react-native-responsive-fontsize';
-import HighlightCardType from '../model/enums/highlightCardType';
+import highlightCardType from '../model/enums/highlightCardType';
 
 interface Props {
     title: string;
     amount: string;
     lastTransaction: string;
-    type: HighlightCardType;
+    type: highlightCardType;
 }
 
 interface TypeProps {
-    type: HighlightCardType;
+    type: highlightCardType;
 }
 
 enum Icon {
@@ -39,7 +39,7 @@ const HighlightCard = ({ type, title, amount, lastTransaction }: Props) => {
 
 const StyledContainer = styled.View<TypeProps>`
     background-color: ${({ theme, type }) => (
-        type === HighlightCardType.TOTAL ? theme.colors.secondary : theme.colors.shape
+        type === highlightCardType.TOTAL ? theme.colors.secondary : theme.colors.shape
     )};
     width: ${RFValue(300)}px;
     border-radius: 5px;
@@ -57,22 +57,22 @@ const StyledTitle = styled.Text<TypeProps>`
     font-family: ${({ theme }) => theme.fonts.regular};
     font-size: ${RFValue(14)}px;
     color: ${({ theme, type }) => (
-        type === HighlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
+        type === highlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
     )};
 `;
 
 const StyledIcon = styled(Feather)<TypeProps>`
     font-size: ${RFValue(40)}px;
 
-    ${(props) => props.type === HighlightCardType.UP && css`
+    ${(props) => props.type === highlightCardType.UP && css`
         color: ${({ theme }) => theme.colors.success};
     `};
 
-    ${(props) => props.type === HighlightCardType.DOWN && css`
+    ${(props) => props.type === highlightCardType.DOWN && css`
         color: ${({ theme }) => theme.colors.attention};
     `};
 
-    ${(props) => props.type === HighlightCardType.TOTAL && css`
+    ${(props) => props.type === highlightCardType.TOTAL && css`
         color: ${({ theme }) => theme.colors.shape};
     `};
 `;
@@ -85,7 +85,7 @@ const StyledAmount = styled.Text<TypeProps>`
     font-family: ${({ theme }) => theme.fonts.medium};
     font-size: ${RFValue(32)}px;
     color: ${({ theme, type }) => (
-        type === HighlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
+        type === highlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
     )};
     margin-top: 38px;
 `;
@@ -94,7 +94,7 @@ const StyledLastTransaction = styled.Text<TypeProps>`
     font-family: ${({ theme }) => theme.fonts.regular};
     font-size: ${RFValue(12)}px;
     color: ${({ theme, type }) => (
-        type === HighlightCardType.TOTAL ? theme.colors.shape : theme.colors.shape
+        type === highlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
     )};
 `;
 
