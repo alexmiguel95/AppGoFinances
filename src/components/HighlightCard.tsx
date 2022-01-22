@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components/native';
 import { Feather } from '@expo/vector-icons'
 import { RFValue } from 'react-native-responsive-fontsize';
-import HighlightCardType from '../utils/enums/HighlightCardType';
+import HighlightCardType from '../model/enums/highlightCardType';
 
 interface Props {
     title: string;
@@ -94,7 +94,7 @@ const StyledLastTransaction = styled.Text<TypeProps>`
     font-family: ${({ theme }) => theme.fonts.regular};
     font-size: ${RFValue(12)}px;
     color: ${({ theme, type }) => (
-        type === HighlightCardType.TOTAL ? theme.colors.shape : theme.colors.text_dark
+        type === HighlightCardType.TOTAL ? theme.colors.shape : theme.colors.shape
     )};
 `;
 
