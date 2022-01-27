@@ -1,0 +1,18 @@
+{
+    "entry": {
+        "type": "UP",
+        "amount": "17.400,00",
+        "lastData": "2020-04-13"
+    },
+    "exits": {
+        "type": "DOWN",
+        "amount": "1.259,00",
+        "lastData": "2020-04-13"
+    },
+    "total": {
+        "type": "TOTAL",
+        "amount": "16.141,00",
+        "firstData": "2020-04-01",
+        "lastData": "2020-04-16"
+    }
+}
