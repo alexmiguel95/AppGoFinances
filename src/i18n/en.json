@@ -1,0 +1,15 @@
+{
+    "dashBoard": {
+        "hello": "Hello, ",
+        "highlightCard" : {
+            "entry": "Entry",
+            "lastTransaction": "Last entry on the %{day} of %{month}",
+            "exits": "Exits",
+            "lastExit": "Last day departure %{day} of %{month}",
+            "fromTo": "%{from} to %{to} of %{month}"
+        },
+        "transactions" : {
+            "listing": "Listing"
+        }
+    }
+}
