@@ -8,10 +8,10 @@ import TransactionCard from '../components/TransactionCard';
 import highlightCardType from '../model/enums/highlightCardType';
 import { TransactionCardProps } from '../model/transaction-card';
 import { FlatList, FlatListProps } from 'react-native';
-import StatusAccount from '../model/enums/statusAccount';
 import BalanceAccount from '../model/balance-account';
 import balanceAccountService from '../service/balance-account-service';
 import dateUtils from '../utils/data-utils';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 const Dashboard = () => {
     const [balanceAccountData, setBalanceAccountData] = useState<BalanceAccount>();
@@ -25,25 +25,27 @@ const Dashboard = () => {
     return (
         <StyledContainer>
             <StyledHeader>
-                <StyledUserContainer>
+                <BorderlessButton>
                     <StyledUserInfo>
                         {/* <StyledPhoto /> */}
                         <StyledUser>
-                            <StyledUserGreeting>{i18n.t('dashBoard.hello')}</StyledUserGreeting>
+                            <StyledUserGreeting>{i18n.t('screens.dashBoard.hello')}</StyledUserGreeting>
                             <StyledUserName>Alex</StyledUserName>
                         </StyledUser>
                     </StyledUserInfo>
-                    <StylePowerIcon name="power" />
-                </StyledUserContainer>
+                    <StyledLogoutButton onPress={() => {}}>
+                        <StylePowerIcon name="power" />
+                    </StyledLogoutButton>
+                </BorderlessButton>
             </StyledHeader>
 
             <StyledHighlightCards>
                 <HighlightCard
                     type={highlightCardType.UP}
-                    title={i18n.t('dashBoard.highlightCard.entry')}
+                    title={i18n.t('screens.dashBoard.highlightCard.entry')}
                     amount={balanceAccountData?.entry.amount ?? ''}
                     lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.lastTransaction',
+                        'screens.dashBoard.highlightCard.lastTransaction',
                         { 
                             day: dateUtils().getDayOfTheMonth(balanceAccountData?.entry.lastData),
                             month: dateUtils().getMonthName(balanceAccountData?.entry.lastData)
@@ -52,10 +54,10 @@ const Dashboard = () => {
                 />
                 <HighlightCard
                     type={highlightCardType.DOWN}
-                    title={i18n.t('dashBoard.highlightCard.exits')}
+                    title={i18n.t('screens.dashBoard.highlightCard.exits')}
                     amount={balanceAccountData?.exits.amount ?? ''}
                     lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.lastExit',
+                        'screens.dashBoard.highlightCard.lastExit',
                         { 
                             day: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData), 
                             month: dateUtils().getMonthName(balanceAccountData?.exits.lastData)
@@ -67,7 +69,7 @@ const Dashboard = () => {
                     title="Total"
                     amount={balanceAccountData?.total.amount ?? ''}
                     lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.fromTo',
+                        'screens.dashBoard.highlightCard.fromTo',
                         { 
                             from: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData),
                             to: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.firstData),
@@ -78,7 +80,7 @@ const Dashboard = () => {
             </StyledHighlightCards>
 
             <StyledTransactions>
-                <StyledTitleTransactions>{i18n.t('dashBoard.transactions.listing')}</StyledTitleTransactions>
+                <StyledTitleTransactions>{i18n.t('screens.dashBoard.transactions.listing')}</StyledTitleTransactions>
                 <StyledTransactionList
                     data={histotyTransactions}
                     keyExtractor={item => item.id}
@@ -116,6 +118,8 @@ const StyledUserInfo = styled.View`
     flex-direction: row;
     align-items: center;
 `;
+
+const StyledLogoutButton = styled(BorderlessButton)``;
 
 const StylePowerIcon = styled(Feather)`
     color: ${({ theme }) => theme.colors.secondary};
