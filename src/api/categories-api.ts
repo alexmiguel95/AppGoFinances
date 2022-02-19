@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios';
-import TypeCategory from '../model/type-category';
+import { ITypeCategory } from '../model/ITypeCategory';
 import mock from './mock-api';
 import categoriesJson from './mocks/categories.json';
 
 export const balanceAccountApi = () => {
-    const getGetogories = (): Promise<AxiosResponse<TypeCategory[]>> => {
+    const getGetogories = (): Promise<AxiosResponse<ITypeCategory[]>> => {
         return mock(categoriesJson);
     };
 

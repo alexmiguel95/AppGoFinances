@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import BalanceAccount from '../model/balance-account';
+import BalanceAccount from '../model/IBalanceAccount';
 import mock from './mock-api';
 import balanceJson from './mocks/balance.json';
 

@@ -13,4 +13,8 @@ interface BalanceAccountType {
     lastData: string;
 }
 
+interface Teste {
+    
+}
+
 export default BalanceAccount;

@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import i18n from '../i18n/i18n';
-import { TypeCategory, Category } from '../model/type-category';
+import { ITypeCategory, ICategory } from '../model/ITypeCategory';
 import categoriesService from '../service/categories-service';
 import { Feather } from '@expo/vector-icons';
 import Button from '../components/form/Button';
@@ -13,13 +13,13 @@ interface CategoryProps {
 }
 
 interface Props {
-    category?: Category;
-    handleSetCategory: (item: TypeCategory) => void
+    category?: ICategory;
+    handleSetCategory: (item: ITypeCategory) => void
     closeSelectCategory: () => void;
 }
 
 const CategorySelect = ({ category, handleSetCategory, closeSelectCategory }: Props) => {
-    const [categories, setCategories] = useState<TypeCategory[]>();
+    const [categories, setCategories] = useState<ITypeCategory[]>();
 
     useEffect(() => {
         categoriesService.getCategories().then(setCategories);

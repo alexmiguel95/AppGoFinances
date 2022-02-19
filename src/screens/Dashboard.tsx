@@ -6,17 +6,18 @@ import i18n from '../i18n/i18n';
 import HighlightCard from '../components/HighlightCard';
 import TransactionCard from '../components/TransactionCard';
 import highlightCardType from '../model/enums/highlightCardType';
-import { TransactionCardProps } from '../model/transaction-card';
+import { TransactionCardProps } from '../model/ITransactionCard';
 import { ActivityIndicator, FlatList, FlatListProps } from 'react-native';
-import BalanceAccount from '../model/balance-account';
+import BalanceAccount from '../model/IBalanceAccount';
 import balanceAccountService from '../service/balance-account-service';
-import dateUtils from '../utils/data-utils';
+import dateUtils from '../utils/dataUtils';
 import { BorderlessButton } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs';
 import { useFocusEffect } from '@react-navigation/native';
 import StatusAccount from '../model/enums/statusAccount';
+import LocalStorageKeys from '../model/enums/localStorageKeys';
 
 interface HighlightProps {
     amount: string;
@@ -51,8 +52,7 @@ const Dashboard = () => {
     );
 
     const loadTransactions = async () => {
-        const dataKey = '@gofinances:transactions';
-        const response = await AsyncStorage.getItem(dataKey);
+        const response = await AsyncStorage.getItem(LocalStorageKeys.TRANSACTIONS);
         const transactionsLocalStorage = response ? JSON.parse(response) : [];
         let entriesTotal = 0;
         let expensiveTotal = 0;

@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import balanceAccountApi from '../api/balance-account-api';
-import BalanceAccount from '../model/balance-account';
+import BalanceAccount from '../model/IBalanceAccount';
 
 export const balanceAccountService = () => {
     const getBalanceAccount = async (): Promise<BalanceAccount> => {

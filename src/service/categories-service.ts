@@ -1,11 +1,11 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import categoriesApi from '../api/categories-api';
-import { TypeCategory } from '../model/type-category';
+import { ITypeCategory } from '../model/ITypeCategory';
 
 export const categoriesService = () => {
-    const getCategories = async (): Promise<TypeCategory[]> => {
+    const getCategories = async (): Promise<ITypeCategory[]> => {
         try {
-            const result: AxiosResponse<TypeCategory[]> = await categoriesApi.getGetogories();
+            const result: AxiosResponse<ITypeCategory[]> = await categoriesApi.getGetogories();
             if (result.status === 200 && result.data != null) {
                 return Promise.resolve(result.data);
             }
