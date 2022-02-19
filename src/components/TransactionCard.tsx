@@ -17,9 +17,9 @@ interface TransactionProps {
 const TransactionCard = ({ data }: Props) => {
     return (
         <StyledContainer>
-            <StyledTitle>{data.title}</StyledTitle>
+            <StyledTitle>{data.name}</StyledTitle>
             <StyledAmount type={data.type}>
-                {`R$ ${data.type === StatusAccount.NEGATIVE ? '- ' + data.amount : data.amount}`}
+                {`${data.type === StatusAccount.NEGATIVE ? '- ' + data.amount : data.amount}`}
             </StyledAmount>
 
             <StyledFooter>

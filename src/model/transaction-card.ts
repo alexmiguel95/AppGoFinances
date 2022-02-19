@@ -3,7 +3,7 @@ import StatusAccount from "./enums/statusAccount";
 export interface TransactionCardProps {
     id: string;
     type: StatusAccount;
-    title: string;
+    name: string;
     amount: string;
     category: Category;
     date: string;
