@@ -7,13 +7,19 @@ import Button from '../components/form/Button';
 import TransactionTypeButton from '../components/form/TransactionTypeButton';
 import TypeButton from '../model/enums/transactionButtonType';
 import CategorySelectButton from '../components/form/CategorySelectButton';
-import { Modal, View } from 'react-native';
+import { Alert, Modal, View } from 'react-native';
 import CategorySelect from './CategorySelect';
 import { Category, TypeCategory } from '../model/type-category';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import StyledError from '../styled/StyledError';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from 'dayjs';
+import uuid from 'react-native-uuid';
+import { useNavigation } from '@react-navigation/native';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { AppRoutesParamList } from '../routes';
 
 interface FormData {
     name: string;
@@ -22,10 +28,20 @@ interface FormData {
     category: string;
 }
 
+type RegisterNavigationProps = BottomTabNavigationProp<
+  AppRoutesParamList,
+  "Listagem"
+>;
+
 const Register = () => {
+    const now = dayjs();
+    const navigation = useNavigation<RegisterNavigationProps>();
+
     const [transactionType, setTransactionType] = useState<string>('');
     const [categoryModalOpen, setCategoryModalOpen] = useState<boolean>(false);
     const [category, setCategory] = useState<Category>();
+
+    const dataKey = '@gofinances:transactions';
 
     const schema = yup.object().shape({
         name: yup.string().required(i18n.t('messages.errors.requiredField')),
@@ -46,6 +62,31 @@ const Register = () => {
         mode: 'all',
     });
 
+    const handleRegister = async (form: FormData) => {
+        const newTransaction = {
+            id: String(uuid.v4()),
+            ...form,
+            category,
+            type: transactionType,
+            date: now.toISOString(),
+        };
+
+        try {
+            const localStorageData = await AsyncStorage.getItem(dataKey);
+            const currentData = localStorageData ? JSON.parse(localStorageData) : [];
+            const newData = [...currentData, newTransaction];
+
+            await AsyncStorage.setItem(dataKey, JSON.stringify(newData));
+           
+            resetForm();
+            navigation.navigate('Listagem');
+       
+        } catch (error) {
+            console.error(error);
+            Alert.alert(i18n.t('messages.errors.couldNotSave'));
+        }
+    };
+
     const handleTransactionsTypeSelect = (type: TypeButton) => {
         setTransactionType(type);
         methods.setValue('transactionType', type);
@@ -64,13 +105,10 @@ const Register = () => {
         setCategoryModalOpen(false);
     };
 
-    const handleRegister = (form: FormData) => {
-        const data = {
-            ...form,
-            category,
-        };
-
-        console.log('data', data);
+    const resetForm = () => {
+        methods.reset();
+        setTransactionType('');
+        setCategory(undefined);
     };
 
     return (
@@ -100,16 +138,16 @@ const Register = () => {
                                 <View>
                                     <StyledTransactionTypes>
                                         <TransactionTypeButton
-                                            type={TypeButton.UP}
+                                            type={TypeButton.POSITIVE}
                                             title="Income"
-                                            onPress={() => handleTransactionsTypeSelect(TypeButton.UP)}
-                                            isActive={transactionType === TypeButton.UP}
+                                            onPress={() => handleTransactionsTypeSelect(TypeButton.POSITIVE)}
+                                            isActive={transactionType === TypeButton.POSITIVE}
                                         />
                                         <TransactionTypeButton
-                                            type={TypeButton.DOWN}
+                                            type={TypeButton.NEGATIVE}
                                             title="Outcome"
-                                            onPress={() => handleTransactionsTypeSelect(TypeButton.DOWN)}
-                                            isActive={transactionType === TypeButton.DOWN}
+                                            onPress={() => handleTransactionsTypeSelect(TypeButton.NEGATIVE)}
+                                            isActive={transactionType === TypeButton.NEGATIVE}
                                         />
                                     </StyledTransactionTypes>
                                     {methods.formState.errors.transactionType && (

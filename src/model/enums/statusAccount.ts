@@ -1,6 +1,6 @@
 enum StatusAccount {
-    POSITIVE = 'POSITIVE',
-    NEGATIVE = 'NEGATIVE'
+    POSITIVE = 'positive',
+    NEGATIVE = 'negative'
 }
 
 export default StatusAccount;

@@ -1,6 +1,6 @@
 enum TypeButton {
-    UP = 'UP',
-    DOWN = 'DOWN'
+    POSITIVE = 'positive',
+    NEGATIVE = 'negative'
 }
 
 export default TypeButton;
