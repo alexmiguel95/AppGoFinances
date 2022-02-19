@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components/native';
 import { RFValue, RFPercentage } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
@@ -7,84 +7,172 @@ import HighlightCard from '../components/HighlightCard';
 import TransactionCard from '../components/TransactionCard';
 import highlightCardType from '../model/enums/highlightCardType';
 import { TransactionCardProps } from '../model/transaction-card';
-import { FlatList, FlatListProps } from 'react-native';
-import StatusAccount from '../model/enums/statusAccount';
+import { ActivityIndicator, FlatList, FlatListProps } from 'react-native';
 import BalanceAccount from '../model/balance-account';
 import balanceAccountService from '../service/balance-account-service';
 import dateUtils from '../utils/data-utils';
+import { BorderlessButton } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs';
+import { useFocusEffect } from '@react-navigation/native';
+import StatusAccount from '../model/enums/statusAccount';
+
+interface HighlightProps {
+    amount: string;
+}
+
+interface HighlightData {
+    entries: HighlightProps;
+    expensives: HighlightProps;
+    total: HighlightProps;
+}
+
+dayjs.extend(customParseFormat);
 
 const Dashboard = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [balanceAccountData, setBalanceAccountData] = useState<BalanceAccount>();
-    const [histotyTransactions, setHistotyTransactions] = useState<TransactionCardProps[]>();
+    const [transactions, setTransactions] = useState<TransactionCardProps[]>();
+    const [highlightData, setHighlightData] = useState<HighlightData>();
 
     useEffect(() => {
         balanceAccountService.getBalanceAccount().then(item => setBalanceAccountData(item));
-        balanceAccountService.getHistoryTransactions().then(item => setHistotyTransactions(item));
     }, []);
-    
+
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadTransactions();
+        }, [])
+    );
+
+    const loadTransactions = async () => {
+        const dataKey = '@gofinances:transactions';
+        const response = await AsyncStorage.getItem(dataKey);
+        const transactionsLocalStorage = response ? JSON.parse(response) : [];
+        let entriesTotal = 0;
+        let expensiveTotal = 0;
+
+        const transactionsFormatted: TransactionCardProps[] = transactionsLocalStorage.map((item: TransactionCardProps) => {
+            if (item.type === StatusAccount.POSITIVE) {
+                entriesTotal += Number(item.amount);
+            } else {
+                expensiveTotal += Number(item.amount);
+            }
+
+            const amount = Number(item.amount).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            });
+
+            const date = dayjs(item.date).format('DD/MM/YY');
+
+            return {
+                id: item.id,
+                name: item.name,
+                amount,
+                type: item.type,
+                category: item.category,
+                date,
+            };
+        });
+
+        setTransactions(transactionsFormatted);
+
+        const total = entriesTotal - expensiveTotal;
+
+        setHighlightData({
+            entries: {
+                amount: entriesTotal.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                }),
+            },
+            expensives: {
+                amount: expensiveTotal.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                }),
+            },
+            total: {
+                amount: total.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                }),
+            },
+        });
+
+        setIsLoading(false);
+    };
+
     return (
         <StyledContainer>
-            <StyledHeader>
-                <StyledUserContainer>
-                    <StyledUserInfo>
-                        {/* <StyledPhoto /> */}
-                        <StyledUser>
-                            <StyledUserGreeting>{i18n.t('dashBoard.hello')}</StyledUserGreeting>
-                            <StyledUserName>Alex</StyledUserName>
-                        </StyledUser>
-                    </StyledUserInfo>
-                    <StylePowerIcon name="power" />
-                </StyledUserContainer>
-            </StyledHeader>
+            {isLoading ? (
+                <StyledLoadContainer>
+                    <ActivityIndicator color="red" size="large" />
+                </StyledLoadContainer>
+            ) : (
+                <>
+                    <StyledHeader>
+                        <BorderlessButton>
+                            <StyledUserInfo>
+                                <StyledPhoto source={{ uri: 'https://avatars.githubusercontent.com/u/45572465?s=40&v=4' }} />
+                                <StyledUser>
+                                    <StyledUserGreeting>{i18n.t('screens.dashBoard.hello')}</StyledUserGreeting>
+                                    <StyledUserName>Alex</StyledUserName>
+                                </StyledUser>
+                            </StyledUserInfo>
+                            <StyledLogoutButton onPress={() => {}}>
+                                <StylePowerIcon name="power" />
+                            </StyledLogoutButton>
+                        </BorderlessButton>
+                    </StyledHeader>
 
-            <StyledHighlightCards>
-                <HighlightCard
-                    type={highlightCardType.UP}
-                    title={i18n.t('dashBoard.highlightCard.entry')}
-                    amount={balanceAccountData?.entry.amount ?? ''}
-                    lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.lastTransaction',
-                        { 
-                            day: dateUtils().getDayOfTheMonth(balanceAccountData?.entry.lastData),
-                            month: dateUtils().getMonthName(balanceAccountData?.entry.lastData)
-                        }
-                    )}
-                />
-                <HighlightCard
-                    type={highlightCardType.DOWN}
-                    title={i18n.t('dashBoard.highlightCard.exits')}
-                    amount={balanceAccountData?.exits.amount ?? ''}
-                    lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.lastExit',
-                        { 
-                            day: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData), 
-                            month: dateUtils().getMonthName(balanceAccountData?.exits.lastData)
-                        }
-                    )}
-                />
-                <HighlightCard
-                    type={highlightCardType.TOTAL}
-                    title="Total"
-                    amount={balanceAccountData?.total.amount ?? ''}
-                    lastTransaction={i18n.t(
-                        'dashBoard.highlightCard.fromTo',
-                        { 
-                            from: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData),
-                            to: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.firstData),
-                            month: dateUtils().getMonthName(balanceAccountData?.exits.lastData)
-                        }
-                    )}
-                />
-            </StyledHighlightCards>
+                    <StyledHighlightCards>
+                        <HighlightCard
+                            type={highlightCardType.UP}
+                            title={i18n.t('screens.dashBoard.highlightCard.entry')}
+                            amount={highlightData?.entries.amount ?? ''}
+                            lastTransaction={i18n.t('screens.dashBoard.highlightCard.lastTransaction', {
+                                day: dateUtils().getDayOfTheMonth(balanceAccountData?.entry.lastData),
+                                month: dateUtils().getMonthName(balanceAccountData?.entry.lastData),
+                            })}
+                        />
+                        <HighlightCard
+                            type={highlightCardType.DOWN}
+                            title={i18n.t('screens.dashBoard.highlightCard.exits')}
+                            amount={highlightData?.expensives.amount ?? ''}
+                            lastTransaction={i18n.t('screens.dashBoard.highlightCard.lastExit', {
+                                day: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData),
+                                month: dateUtils().getMonthName(balanceAccountData?.exits.lastData),
+                            })}
+                        />
+                        <HighlightCard
+                            type={highlightCardType.TOTAL}
+                            title="Total"
+                            amount={highlightData?.total.amount ?? ''}
+                            lastTransaction={i18n.t('screens.dashBoard.highlightCard.fromTo', {
+                                from: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.lastData),
+                                to: dateUtils().getDayOfTheMonth(balanceAccountData?.exits.firstData),
+                                month: dateUtils().getMonthName(balanceAccountData?.exits.lastData),
+                            })}
+                        />
+                    </StyledHighlightCards>
 
-            <StyledTransactions>
-                <StyledTitleTransactions>{i18n.t('dashBoard.transactions.listing')}</StyledTitleTransactions>
-                <StyledTransactionList
-                    data={histotyTransactions}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => <TransactionCard data={item} />}
-                />
-            </StyledTransactions>
+                    <StyledTransactions>
+                        <StyledTitleTransactions>{i18n.t('screens.dashBoard.transactions.listing')}</StyledTitleTransactions>
+                        <StyledTransactionList
+                            data={transactions}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => <TransactionCard data={item} />}
+                        />
+                    </StyledTransactions>
+                </>
+            )}
         </StyledContainer>
     );
 };
@@ -116,6 +204,8 @@ const StyledUserInfo = styled.View`
     flex-direction: row;
     align-items: center;
 `;
+
+const StyledLogoutButton = styled(BorderlessButton)``;
 
 const StylePowerIcon = styled(Feather)`
     color: ${({ theme }) => theme.colors.secondary};
@@ -164,10 +254,15 @@ const StyledTitleTransactions = styled.Text`
     margin-bottom: 16px;
 `;
 
-const StyledTransactionList = styled(
-    FlatList as new (props: FlatListProps<TransactionCardProps>) => FlatList<TransactionCardProps>).attrs({
+const StyledTransactionList = styled(FlatList as new (props: FlatListProps<TransactionCardProps>) => FlatList<TransactionCardProps>).attrs({
     showVerticalScrollIndicator: false,
     contentContainerStyle: { paddingBottom: 10 },
 })``;
+
+const StyledLoadContainer = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+`;
 
 export default Dashboard;

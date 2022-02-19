@@ -1,15 +1,40 @@
 {
-    "dashBoard": {
-        "hello": "Olá, ",
-        "highlightCard" : {
-            "entry": "Entrada",
-            "lastTransaction": "Última entrada dia %{day} de %{month}",
-            "exits": "Saídas",
-            "lastExit": "Última saída dia %{day} de %{month}",
-            "fromTo": "%{from} á %{to} de %{month}"
+    "screens": {
+        "dashBoard": {
+            "hello": "Olá, ",
+            "highlightCard" : {
+                "entry": "Entrada",
+                "lastTransaction": "Última entrada dia %{day} de %{month}",
+                "exits": "Saídas",
+                "lastExit": "Última saída dia %{day} de %{month}",
+                "fromTo": "%{from} á %{to} de %{month}"
+            },
+            "transactions" : {
+                "listing": "Listagem"
+            }
         },
-        "transactions" : {
-            "listing": "Listagem"
+    
+        "register": {
+            "title": "Cadastro",
+            "form": {
+                "name": "Nome",
+                "price": "Preço",
+                "button": "Enviar"
+            },
+            "category": "Categoria"
+        },
+    
+        "category": {
+            "select": "Selecionar"
+        }
+    },
+   
+    "messages": {
+        "errors": {
+            "requiredField": "Campo obrigatório",
+            "numericValue": "Informe um valor numérico",
+            "valueNegative": "O valor não pode ser negativo",
+            "couldNotSave": "Não foi possivel salvar"
         }
     }
 }

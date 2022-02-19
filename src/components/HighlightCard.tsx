@@ -30,7 +30,7 @@ const HighlightCard = ({ type, title, amount, lastTransaction }: Props) => {
             </StyledHeader>
 
             <StyledFooter>
-                <StyledAmount type={type}>{`R$ ${amount}`}</StyledAmount>
+                <StyledAmount type={type}>{amount}</StyledAmount>
                 <StyledLastTransaction type={type}>{lastTransaction}</StyledLastTransaction>
             </StyledFooter>
         </StyledContainer>
