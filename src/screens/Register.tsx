@@ -9,7 +9,7 @@ import TypeButton from '../model/enums/transactionButtonType';
 import CategorySelectButton from '../components/form/CategorySelectButton';
 import { Alert, Modal, View } from 'react-native';
 import CategorySelect from './CategorySelect';
-import { Category, TypeCategory } from '../model/type-category';
+import { ICategory, ITypeCategory } from '../model/ITypeCategory';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -20,6 +20,7 @@ import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppRoutesParamList } from '../routes';
+import LocalStorageKeys from '../model/enums/localStorageKeys';
 
 interface FormData {
     name: string;
@@ -39,9 +40,7 @@ const Register = () => {
 
     const [transactionType, setTransactionType] = useState<string>('');
     const [categoryModalOpen, setCategoryModalOpen] = useState<boolean>(false);
-    const [category, setCategory] = useState<Category>();
-
-    const dataKey = '@gofinances:transactions';
+    const [category, setCategory] = useState<ICategory>();
 
     const schema = yup.object().shape({
         name: yup.string().required(i18n.t('messages.errors.requiredField')),
@@ -72,11 +71,11 @@ const Register = () => {
         };
 
         try {
-            const localStorageData = await AsyncStorage.getItem(dataKey);
+            const localStorageData = await AsyncStorage.getItem(LocalStorageKeys.TRANSACTIONS);
             const currentData = localStorageData ? JSON.parse(localStorageData) : [];
             const newData = [...currentData, newTransaction];
 
-            await AsyncStorage.setItem(dataKey, JSON.stringify(newData));
+            await AsyncStorage.setItem(LocalStorageKeys.TRANSACTIONS, JSON.stringify(newData));
            
             resetForm();
             navigation.navigate('Listagem');
@@ -92,7 +91,7 @@ const Register = () => {
         methods.setValue('transactionType', type);
     };
 
-    const handleSetCategory = (item: TypeCategory) => {
+    const handleSetCategory = (item: ITypeCategory) => {
         methods.setValue('category', item.name);
         setCategory(item);
     };

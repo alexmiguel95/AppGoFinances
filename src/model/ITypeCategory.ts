@@ -1,10 +1,11 @@
-export interface TypeCategory {
+export interface ITypeCategory {
     key: string;
     name: string;
     icon: string;
+    color: string;
 }
 
-export interface Category {
+export interface ICategory {
     key: string;
     name: string;
 }

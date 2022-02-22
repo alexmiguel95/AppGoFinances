@@ -20,9 +20,18 @@ const dateUtils = () => {
         return '';
     };
 
+    const getMonthAndYear = (date: string) => {
+        if (dayjs(date).isValid()) {
+            return dayjs(date).format('MMMM, YYYY');
+        }
+      
+        return '';
+    };
+
     return {
         getDayOfTheMonth,
-        getMonthName
+        getMonthName,
+        getMonthAndYear
     };
 };
 
