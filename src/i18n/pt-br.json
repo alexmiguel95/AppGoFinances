@@ -26,6 +26,10 @@
     
         "category": {
             "select": "Selecionar"
+        },
+
+        "resume": {
+            "summaryCategory": "Resumo por categoria"
         }
     },
    
