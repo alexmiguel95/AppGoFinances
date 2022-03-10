@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 import uuid from 'react-native-uuid';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { AppRoutesParamList } from '../routes';
+import { AppRoutesParamList } from '../routes/Private.routes';
 import LocalStorageKeys from '../model/enums/localStorageKeys';
 
 interface FormData {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Dashboard from './screens/Dashboard';
-import Register from './screens/Register';
-import Resume from './screens/Resume';
+import Dashboard from '../screens/Dashboard';
+import Register from '../screens/Register';
+import Resume from '../screens/Resume';
 import { useTheme } from 'styled-components';
 import { Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -15,7 +15,7 @@ export type AppRoutesParamList = {
 
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutesParamList>();
 
-const Routes = () => {
+const PrivateRoutes = () => {
     const theme = useTheme();
 
     return (
@@ -56,4 +56,4 @@ const Routes = () => {
     );
 };
 
-export default Routes;
+export default PrivateRoutes;

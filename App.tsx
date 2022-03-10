@@ -8,9 +8,9 @@ import {
     Poppins_700Bold
 } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
-import { NavigationContainer } from '@react-navigation/native';
-import Routes from './src/routes';
+import Routes from './src/routes/Routes';
 import { StatusBar } from 'react-native';
+import { AuthProvider } from './src/context/Auth';
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -25,10 +25,11 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <NavigationContainer>
-                <StatusBar barStyle="light-content" />
+            <StatusBar barStyle="light-content" />
+
+            <AuthProvider>
                 <Routes />
-            </NavigationContainer>
+            </AuthProvider>
         </ThemeProvider>
     );
 };
