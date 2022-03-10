@@ -2,7 +2,7 @@
 
 |   Descrição
 |---
-| Aplicativo de gestão financeira. O objetivo aplicativo ajudar a fazer a gestão financeira pessoal. Desenvolvido em React Native com Expo CLI gerenciado por Bare Workflow utilizando TypeScript. Bibliotecas utilizadas: react-i18next V11, styled-components V5 |
+| Aplicativo de gestão financeira. O objetivo aplicativo é ajudar a fazer a gestão financeira pessoal. Desenvolvido em React Native com Expo CLI gerenciado por Bare Workflow utilizando TypeScript. Bibliotecas utilizadas: react-i18next V11, styled-components V5 |
 
 ---
 &nbsp; 
