@@ -28,7 +28,7 @@ export const socialLoginApi = () => {
         }) as unknown as IDataUserWithApple;;
     
         return response;
-    };
+    }; 
 
     return {
         signInWithGoogle,

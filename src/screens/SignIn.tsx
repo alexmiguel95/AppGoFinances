@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import LogoSvg from '../assets/svg/logo.svg';
@@ -9,11 +9,17 @@ import SignInSocialButton from '../components/SignInSocialButton';
 import { useAuth } from '../context/Auth';
 import socialLoginService from '../service/social-login-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from 'styled-components';
+import { ActivityIndicator, Platform } from 'react-native';
 
 const SignIn = () => {
     const { user, setUser } = useAuth();
+    const theme = useTheme();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSignInWithGoogle = () => {
+        setIsLoading(true);
+
         socialLoginService.signInWithGoogle().then(async response => {
             setUser({
                 id: response.id,
@@ -22,17 +28,22 @@ const SignIn = () => {
                 photo: response.picture,
             });
             await AsyncStorage.setItem('@gofinances:user', JSON.stringify(response));
+            setIsLoading(false);
         });
     };
 
     const handleSignInWithApple = () => {
+        setIsLoading(true);
+
         socialLoginService.signInWithApple().then(async response => {
             setUser({
                 id: response.id,
                 name: response.fullName.givenName,
                 email: response.email,
+                photo: `https://ui-avatars.com/api/?name=${response.fullName.givenName}`
             });
             await AsyncStorage.setItem('@gofinances:user', JSON.stringify(response));
+            setIsLoading(false);
         });
     };
 
@@ -53,12 +64,16 @@ const SignIn = () => {
                         svg={GoogleSvg}
                         onPress={() => handleSignInWithGoogle()}
                     />
-                    <SignInSocialButton
-                        title={i18n.t('screens.signIn.loginWithApple')}
-                        svg={AppleSvg}
-                        onPress={() => handleSignInWithApple()}
-                    />
+                    {Platform.OS === 'ios' && (
+                        <SignInSocialButton
+                            title={i18n.t('screens.signIn.loginWithApple')}
+                            svg={AppleSvg}
+                            onPress={() => handleSignInWithApple()}
+                        />
+                    )}
                 </StyledFooterWrapper>
+
+                { isLoading && <ActivityIndicator color={theme.colors.shape} style={{ marginTop: 18 }} />}
             </StyledFooter>
         </StyledContainer>
     );
