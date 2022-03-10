@@ -30,6 +30,13 @@
 
         "resume": {
             "summaryCategory": "Resumo por categoria"
+        },
+
+        "signIn": {
+            "title": "Controle suas finanças de forma muito simples",
+            "loginTitle": "Faça seu login com uma das contas abaixo",
+            "loginWithGoogle": "Entrar com Google",
+            "loginWithApple": "Entrar com Apple"
         }
     },
    
@@ -38,7 +45,9 @@
             "requiredField": "Campo obrigatório",
             "numericValue": "Informe um valor numérico",
             "valueNegative": "O valor não pode ser negativo",
-            "couldNotSave": "Não foi possivel salvar"
+            "couldNotSave": "Não foi possivel salvar",
+            "notConnectGoogleAccount": "Não foi possível conectar a conta Google",
+            "notConnectAppleAccount": "Não foi possível conectar a conta Apple"
         }
     }
 }
