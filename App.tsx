@@ -10,16 +10,17 @@ import {
 import AppLoading from 'expo-app-loading';
 import Routes from './src/routes/Routes';
 import { StatusBar } from 'react-native';
-import { AuthProvider } from './src/context/Auth';
+import { AuthProvider, useAuth } from './src/context/Auth';
 
 export default function App() {
+    const { isUserStorageLoading } = useAuth();
     const [fontsLoaded] = useFonts({
         Poppins_400Regular,
         Poppins_500Medium,
         Poppins_700Bold
     });
 
-    if (!fontsLoaded) {
+    if (!fontsLoaded || isUserStorageLoading ) {
         return <AppLoading />
     };
 

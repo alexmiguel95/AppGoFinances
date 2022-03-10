@@ -18,6 +18,7 @@ import customParseFormat from 'dayjs';
 import { useFocusEffect } from '@react-navigation/native';
 import StatusAccount from '../model/enums/statusAccount';
 import LocalStorageKeys from '../model/enums/localStorageKeys';
+import { useAuth, IUser } from '../context/Auth';
 
 interface HighlightProps {
     amount: string;
@@ -32,6 +33,8 @@ interface HighlightData {
 dayjs.extend(customParseFormat);
 
 const Dashboard = () => {
+    const { setUser, user } = useAuth();
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [balanceAccountData, setBalanceAccountData] = useState<BalanceAccount>();
     const [transactions, setTransactions] = useState<TransactionCardProps[]>();
@@ -50,6 +53,11 @@ const Dashboard = () => {
             loadTransactions();
         }, [])
     );
+
+    const handleSignOut = async () => {
+        setUser({} as IUser);
+        await AsyncStorage.removeItem('@gofinances:user');
+    }
 
     const loadTransactions = async () => {
         const response = await AsyncStorage.getItem(LocalStorageKeys.TRANSACTIONS);
@@ -120,13 +128,13 @@ const Dashboard = () => {
                     <StyledHeader>
                         <BorderlessButton>
                             <StyledUserInfo>
-                                <StyledPhoto source={{ uri: 'https://avatars.githubusercontent.com/u/45572465?s=40&v=4' }} />
+                                <StyledPhoto source={{ uri: user.photo }} />
                                 <StyledUser>
                                     <StyledUserGreeting>{i18n.t('screens.dashBoard.hello')}</StyledUserGreeting>
-                                    <StyledUserName>Alex</StyledUserName>
+                                    <StyledUserName>{user.name}</StyledUserName>
                                 </StyledUser>
                             </StyledUserInfo>
-                            <StyledLogoutButton onPress={() => {}}>
+                            <StyledLogoutButton onPress={handleSignOut}>
                                 <StylePowerIcon name="power" />
                             </StyledLogoutButton>
                         </BorderlessButton>

@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface IUser {
+export interface IUser {
     id: string;
     name: string;
     email: string;
@@ -11,6 +11,7 @@ interface IUser {
 interface IAuthContextData {
     user: IUser;
     setUser: React.Dispatch<React.SetStateAction<IUser>>;
+    isUserStorageLoading: boolean;
 }
 
 interface IAuthProviderProps {
@@ -38,7 +39,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
         loadUserStorageDate();
     }, []);
 
-    return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser, isUserStorageLoading }}>{children}</AuthContext.Provider>;
 };
 
 const useAuth = () => {
