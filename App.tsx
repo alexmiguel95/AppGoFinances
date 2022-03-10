@@ -8,27 +8,29 @@ import {
     Poppins_700Bold
 } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
-import { NavigationContainer } from '@react-navigation/native';
-import Routes from './src/routes';
+import Routes from './src/routes/Routes';
 import { StatusBar } from 'react-native';
+import { AuthProvider, useAuth } from './src/context/Auth';
 
 export default function App() {
+    const { isUserStorageLoading } = useAuth();
     const [fontsLoaded] = useFonts({
         Poppins_400Regular,
         Poppins_500Medium,
         Poppins_700Bold
     });
 
-    if (!fontsLoaded) {
+    if (!fontsLoaded || isUserStorageLoading ) {
         return <AppLoading />
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <NavigationContainer>
-                <StatusBar barStyle="light-content" />
+            <StatusBar barStyle="light-content" />
+
+            <AuthProvider>
                 <Routes />
-            </NavigationContainer>
+            </AuthProvider>
         </ThemeProvider>
     );
 };
